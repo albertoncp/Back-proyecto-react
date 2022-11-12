@@ -28,6 +28,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const userDB = await User.findOne({ email: req.body.email });
+    console.log(req.body);
     if (!userDB) {
       return res.status(404).json("No existe el usuario");
     }
