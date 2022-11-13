@@ -10,6 +10,7 @@ router.get("/", async (req, res) => {
     const allUsers = await User.find();
     return res.status(200).json(allUsers);
   } catch (error) {
+    
     return res.status(500).json("Error al leer los usuarios");
   }
 });
@@ -17,26 +18,30 @@ router.get("/", async (req, res) => {
 router.post("/register", async (req, res) => {
   try {
     const user = req.body;
+    console.log(req.body)
     const newUser = new User(user);
     const created = await newUser.save();
     return res.status(201).json(created);
   } catch (error) {
-    return res.status(500).json("Error al crear el usuario");
+
+    return error;
   }
 });
 
 router.post("/login", async (req, res) => {
   try {
     const userDB = await User.findOne({ email: req.body.email });
-    console.log(req.body);
+    console.log(userDB);
     if (!userDB) {
       return res.status(404).json("No existe el usuario");
     }
     if (bcrypt.compareSync(req.body.password, userDB.password)) {
+      console.log('hola')
       const token = generateSign(userDB._id, userDB.email);
+     
       return res.status(200).json({ token, userDB });
     } else {
-      return res.status(200).json("La contraseña es incorrecta crack");
+      return res.status(200).json("La contraseña es incorrecta maquina");
     }
   } catch (error) {
     return res.status(500).json("Error al loguear el usuario");
