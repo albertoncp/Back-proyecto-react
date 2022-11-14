@@ -26,6 +26,9 @@ router.get("/:id", [isAuth], async (req, res) => {
 router.post("/create", upload.single("imagen"), async (req, res) => {
   try {
     const ropa = req.body;
+    if(req.file){
+      ropa.imagen = req.file.path;
+    }
     /* console.log(req.body); */
     const newRopa = new Ropa(ropa);
     console.log(newRopa);
