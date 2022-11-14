@@ -1,7 +1,7 @@
 const express = require("express");
 const Ropa = require("./ropa.model");
 const upload = require("../../middlewares/file");
-const { isAuth } = require("../../middlewares/auth");
+const { isAuth,isAdmin } = require("../../middlewares/auth");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
