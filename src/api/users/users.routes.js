@@ -3,7 +3,7 @@ const User = require("./users.model");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const { generateSign } = require("../../utils/jwt/jwt");
-const { isAuth } = require("../../middlewares/auth");
+const { isAuth, isAdmin } = require("../../middlewares/auth");
 
 router.get("/", async (req, res) => {
   try {
@@ -36,7 +36,7 @@ router.post("/login", async (req, res) => {
       return res.status(404).json("No existe el usuario");
     }
     if (bcrypt.compareSync(req.body.password, userDB.password)) {
-      console.log('hola')
+      
       const token = generateSign(userDB._id, userDB.email);
      
       return res.status(200).json({ token, userDB });
@@ -47,6 +47,7 @@ router.post("/login", async (req, res) => {
     return res.status(500).json("Error al loguear el usuario");
   }
 });
+
 
 router.post("/logout", async (req, res) => {
   try {
@@ -65,4 +66,11 @@ router.post("/checksession", [isAuth], (req, res, next) => {
   }
 });
 
+router.get("/checksession", (req, res, next) => {
+  try {
+    return res.status(200).json(req.user);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
 module.exports = router;
